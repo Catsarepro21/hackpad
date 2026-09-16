@@ -1,73 +1,38 @@
 import board
-import busio
 from kmk.kmk_keyboard import KMKKeyboard
 from kmk.keys import KC
 from kmk.scanners import DiodeOrientation
-from kmk.modules.macros import Macros
+from kmk.modules.macros import Macros, Tap
 from kmk.modules.encoder import EncoderHandler
-from kmk.extensions.peg_oled_display import Oled, OledDisplayMode, OledData
+from kmk.extensions.media_keys import MediaKeys
 
 keyboard = KMKKeyboard()
-
 macros = Macros()
-encoder_handler = EncoderHandler()
-keyboard.modules = [macros, encoder_handler]
+encoders = EncoderHandler()
+keyboard.modules = [macros, encoders]
+keyboard.extensions = [MediaKeys()]
 
-# --- MATRIX CONFIG ---
-# 3 MX mechanical switches
-keyboard.col_pins = (board.D0, board.D1, board.D2)
-keyboard.row_pins = (board.D3,)
-keyboard.diode_orientation = DiodeOrientation.COL2ROW
+keyboard.row_pins = (board.D7, board.D10)
+keyboard.col_pins = (board.D9, board.D8, board.D6)
+keyboard.diode_orientation = DiodeOrientation.ROW2COL
 
-# --- GIT MACROS ---
-GIT_ADD = KC.M("git add .\n")
-GIT_COMMIT = KC.M('git commit -m "update"\n')
-GIT_PUSH = KC.M("git push\n")
+git_add = KC.MACRO("git add .", Tap(KC.ENTER))
+git_commit = KC.MACRO('git commit -m "update"', Tap(KC.ENTER))
+git_push = KC.MACRO("git push", Tap(KC.ENTER))
+keyboard.keymap = [[
+    git_add, git_commit, git_push,
+    KC.A, KC.B, KC.C,
+]]
 
-keyboard.keymap = [
-    [GIT_ADD, GIT_COMMIT, GIT_PUSH],
-]
-
-# --- ROTARY ENCODERS ---
-# Seeed Studio XIAO RP2040 Pin Mapping:
-# Encoder 1: D6 (A), D7 (B), D8 (Push Button)
-# Encoder 2: D9 (A), D10 (B), None (or shared D8)
-encoder_handler.pins = (
-    (board.D6, board.D7, board.D8), 
-    (board.D9, board.D10, None), 
+encoders.pins = (
+    (board.D0, board.D1, board.D2),
+    (board.D3, board.D4, board.D5),
 )
+encoders.map = [(
+    (KC.UP, KC.DOWN, KC.MUTE),
+    (KC.PGUP, KC.PGDN, KC.MEDIA_PLAY_PAUSE),
+)]
 
-# Format: ((Enc1_Left, Enc1_Right, Enc1_Click), (Enc2_Left, Enc2_Right, Enc2_Click))
-# Arrow keys/Page up down are used here to handle scrolling through git diffs/logs
-encoder_handler.map = [
-    (
-        (KC.UP, KC.DOWN, KC.MUTE),          
-        (KC.PGUP, KC.PGDN, KC.MEDIA_PLAY_PAUSE), 
-    ),
-]
-
-# --- OLED DISPLAY (I2C) ---
-# Seeed Studio XIAO RP2040 hardware I2C pins (D4 = SDA, D5 = SCL)
-i2c_bus = busio.I2C(board.SCL, board.SDA) 
-
-oled_data = OledData(
-    corner_one={
-        0: OledDisplayMode.TXT,
-        1: "HACKPAD v1.0",
-    },
-    corner_two={
-        0: OledDisplayMode.TXT,
-        1: "Ready",
-    },
-)
-
-oled_ext = Oled(
-    oled_data,
-    toDisplay=OledDisplayMode.TXT,
-    flip=False,
-    i2c=i2c_bus,
-)
-keyboard.extensions.append(oled_ext)
-
+print("Hackpad Git keymap starting: Add / Commit / Push; A / B / C")
 if __name__ == "__main__":
-    keyboard.go()
+    keyboard.go()
