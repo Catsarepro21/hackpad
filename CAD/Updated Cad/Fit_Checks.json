@@ -1,0 +1,50 @@
+{
+  "top": {
+    "valid": true,
+    "solids": 1,
+    "volume": 15832.05331061818,
+    "size": [
+      79.2,
+      72.65,
+      14.8
+    ]
+  },
+  "base": {
+    "valid": true,
+    "solids": 1,
+    "volume": 16593.198359345588,
+    "size": [
+      79.2,
+      72.65,
+      11.5
+    ]
+  },
+  "collisions": [],
+  "halves_intersection_mm3": 0.0,
+  "keycap_envelope": "18.6 x 18.6 mm, z >= 7 mm; actual keycaps not supplied",
+  "keycap_collisions_mm3": 0.0,
+  "screw": {
+    "length_mm": 16,
+    "seat_z": -10.9,
+    "tip_z": 5.1,
+    "insert_entry_z": 1.7,
+    "thread_engagement_mm": 3.4,
+    "insert_OD_mm": 5,
+    "insert_length_mm": 4,
+    "pocket_diameter_mm": 4.4
+  },
+  "stl_checks": {
+    "Insert_Test_4.3_4.4_4.5mm.stl": {
+      "triangles": 1524,
+      "open_or_nonmanifold_edges": 0
+    },
+    "Macropad_Base_PRINT.stl": {
+      "triangles": 7628,
+      "open_or_nonmanifold_edges": 0
+    },
+    "Macropad_Top_PRINT.stl": {
+      "triangles": 9052,
+      "open_or_nonmanifold_edges": 0
+    }
+  }
+}
